@@ -26,7 +26,13 @@ cp target/x86_64-unknown-uefi/debug/examples/uefi.efi esp/efi/boot/bootx64.efi
 ```
 5. run qemu
 ```shell
-qemu-system-x86_64 -enable-kvm \                                              
+qemu-system-x86_64 -nodefaults \
+    -device virtio-rng-pci \
+    -machine q35 \
+    -smp 4 \
+    -m 256M -vga std \
+    --enable-kvm \
+    -device isa-debug-exit,iobase=0xf4,iosize=0x04 \
     -drive if=pflash,format=raw,readonly=on,file=OVMF_CODE.fd \
     -drive if=pflash,format=raw,readonly=on,file=OVMF_VARS.fd \
     -drive format=raw,file=fat:rw:esp
